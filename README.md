@@ -22,21 +22,21 @@ Kubernetes 是一个开源的容器编排引擎，用来对容器化应用进行
 
   * Binary download
 
-    ```sh
+    ```bash
     curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
     sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
     ```
 
   * Debian package
 
-    ```sh
+    ```bash
     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
     sudo dpkg -i minikube_latest_amd64.deb
     ```
 
   * RPM package
 
-    ```sh
+    ```bash
     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
     sudo rpm -Uvh minikube-latest.x86_64.rpm
     ```
@@ -45,7 +45,7 @@ Kubernetes 是一个开源的容器编排引擎，用来对容器化应用进行
 
 #### 3.启动集群
 
-```sh
+```bash
 minikube start --driver=docker
 ```
 
@@ -55,13 +55,13 @@ minikube start --driver=docker
 >
 > 2. Docker创建配置目录
 >
->    ```sh
+>    ```bash
 >    sudo mkdir -p /etc/systemd/system/docker.service.d
 >    ```
 >
 > 3. 写 proxy 配置
 >
->    ```sh
+>    ```bash
 >    sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 >    [Service]
 >    Environment="HTTP_PROXY=http://宿主机IP:代理端口"
@@ -72,28 +72,28 @@ minikube start --driver=docker
 >
 > 4. 重启Docker
 >
->    ```sh
+>    ```bash
 >    sudo systemctl daemon-reexec
 >    sudo systemctl restart docker
 >    ```
 >
 > 5. 查看Docker代理是否成功配置
 >
->    ```sh
+>    ```bash
 >    docker info | grep -i proxy
 >    ```
 >
 > 6. 测试拉取镜像是否成功
 >
->    ```sh
+>    ```bash
 >    docker pull hello-world
 >    ```
 >
 > 7. 重启minikube（安装镜像缓存路径`/home/master/.minikube/cache/`，可以通过删除缓存彻底重装）
 >
->    ```sh
+>    ```bash
 >    minikube delete
->                                                                                                       
+>                                                                                                          
 >    minikube start \
 >      --driver=docker \
 >      --docker-env HTTP_PROXY=http://宿主机IP:代理端口 \
@@ -107,7 +107,7 @@ minikube start --driver=docker
 
 * 查看你的集群
 
-  ```sh
+  ```bash
   minikube kubectl -- get po -A
   ```
 
@@ -117,13 +117,13 @@ minikube start --driver=docker
 
 * 仪表盘（minikube集成了k8s仪表盘）
 
-  ```sh
+  ```bash
   minikube dashboard
   ```
   
   执行完会提示仪表盘的访问地址，只限于本地访问，要是在虚拟机中或者需要外部访问，需要添加外部访问代理：
   
-  ```sh
+  ```bash
   kubectl proxy --port=8000 --address='虚拟机ip' --accept-hosts='^.*' &
   ```
 
@@ -131,26 +131,26 @@ minikube start --driver=docker
 
 * 部署一个示例应用，使用端口`8080`
 
-  ```sh
+  ```bash
   kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
   kubectl expose deployment hello-minikube --type=NodePort --port=8080
   ```
 
 * 部署后通过指令查看
 
-  ```sh
+  ```bash
   kubectl get services hello-minikube
   ```
 
 * 查看执行服务的url访问地址信息
 
-  ```sh
+  ```bash
   minikube service hello-minikube
   ```
 
 * 对服务进行端口转发
 
-  ```sh
+  ```bash
   kubectl port-forward service/hello-minikube 7080:8080
   ```
 
@@ -158,49 +158,49 @@ minikube start --driver=docker
 
 * 暂停Kubernetes（不影响当前已部署应用）
 
-  ```sh
+  ```bash
   minikube pause
   ```
 
 * 解除暂停Kubernetes
 
-  ```sh
+  ```bash
   minikube unpause
   ```
 
 * 停止集群
 
-  ```sh
+  ```bash
   minikube stop
   ```
 
 * 更改默认内存限制（需要重启）
 
-  ```sh
+  ```bash
   minikube config set memory 9001
   ```
 
 * 列出集群中所有可用的插件
 
-  ```sh
+  ```bash
   minikube addons list
   ```
 
 * 创建另一个新集群（可以指定版本）
 
-  ```sh
+  ```bash
   minikube start -p aged --kubernetes-version=v1.34.0
   ```
 
 * 删除所有集群
 
-  ```sh
+  ```bash
   minikube delete --all
   ```
 
 * 升级集群
 
-  ```
+  ```bash
   minikube start --kubernetes-version=latest
 
 #### 7.插件
@@ -209,25 +209,25 @@ minikube内置的一些可以快速部署的应用和服务
 
 * 列出集群中所有可用的插件
 
-  ```sh
+  ```bash
   minikube addons enable <name>
   ```
 
 * 启动时则加载并启用插件（支持指定多个）
 
-  ```sh
+  ```bash
   minikube start --addons <name1> --addons <name2>
   ```
 
 * 暴露需要开启端口的插件
 
-  ```sh
+  ```bash
   minikube addons open <name>
   ```
 
 * 禁用插件
 
-  ```sh
+  ```bash
   minikube addons disable <name>
   ```
 
@@ -238,13 +238,13 @@ minikube内置的一些可以快速部署的应用和服务
 
 * 获取`pods`
 
-  ```sh
+  ```bash
   minikube kubectl -- get pods
   ```
 
 * 获取帮助
 
-  ```sh
+  ```bash
   minikube kubectl -- --help
   ```
 
@@ -261,7 +261,7 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
 * 获取minikube的`IP`和服务的`NodePort`
 
-  ```sh
+  ```bash
   minikube service <service-name> --url
   ```
 
@@ -275,19 +275,19 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
   1. 创建Kubernetes deployment
 
-     ```sh
+     ```bash
      kubectl create deployment hello-minikube1 --image=kicbase/echo-server:1.0
      ```
 
   2. 将已有的deployment暴露为NodePort服务
 
-     ```sh
+     ```bash
      kubectl expose deployment hello-minikube1 --type=NodePort --port=8080
      ```
 
   3. 查看NodePort服务
 
-     ```sh
+     ```bash
      $ kubectl get svc
      NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
      hello-minikube1   NodePort    10.100.238.34   <none>        8080:31389/TCP   3s
@@ -295,7 +295,7 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
   4. 启用服务tunnel
 
-     ```sh
+     ```bash
      minikube service hello-minikube1 --url
      ```
 
@@ -303,7 +303,7 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
   5. 通过http访问服务
 
-     ```sh
+     ```bash
      curl -I <IP:Port>
      ```
 
@@ -313,7 +313,7 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
   要确定服务的NodePort，可以使用如下kubectl命令（注意在JSON输出中nodePort以小写n开头）
 
-  ```sh
+  ```bash
   kubectl get service <service-name> --output='jsonpath="{.spec.ports[0].nodePort}"'
   ```
 
@@ -321,7 +321,7 @@ NodePort方式是提供外部访问服务的最基础方式，将服务端口映
 
   默认情况下，minikube只会暴露端口30000-32767，可以使用以下方式调整范围
 
-  ```sh
+  ```bash
   minikube start --extra-config=apiserver.service-node-port-range=1-65535
   ```
 
@@ -333,7 +333,7 @@ LoadBalancer（负载均衡）是将服务暴露到公网的标准方法。使�
 
 1. 在独立的终端执行，指令需要管理员权限密码执行
 
-   ```sh
+   ```bash
    minikube tunnel
    ```
 
@@ -341,19 +341,19 @@ LoadBalancer（负载均衡）是将服务暴露到公网的标准方法。使�
    
 2. 创建一个Kubernetes的deployment
 
-   ```sh
+   ```bash
    kubectl create deployment hello-minikube2 --image=kicbase/echo-server:1.0
    ```
 
 3. 将已有的deployment暴露为LoadBalancer服务
 
-   ```sh
+   ```bash
    kubectl expose deployment hello-minikube2 --type=LoadBalancer --port=8080
    ```
 
 4. 查看外部IP
 
-   ```sh
+   ```bash
    $ kc get svc
    NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)          AGE
    hello-minikube1   LoadBalancer   10.96.184.178   10.96.184.178   8080:30791/TCP   40s
@@ -363,7 +363,7 @@ LoadBalancer（负载均衡）是将服务暴露到公网的标准方法。使�
 
 5. 通过http访问服务
 
-   ```sh
+   ```bash
    curl -I <IP:Port>
    ```
 
@@ -377,9 +377,11 @@ LoadBalancer（负载均衡）是将服务暴露到公网的标准方法。使�
 
 ![components-of-kubernetes](components-of-kubernetes.svg)
 
+##### Ⅰ.核心组件
+
 Kubernetes 集群由控制平面和一个或多个工作节点组成，核心组件如下：
 
-##### Ⅰ.控制平面组件
+###### i.控制平面组件
 
 用于管理集群的整体状态
 
@@ -403,7 +405,7 @@ Kubernetes 集群由控制平面和一个或多个工作节点组成，核心组
 
   与底层云驱动集成
 
-##### Ⅱ.Node组件
+###### ii.Node组件
 
 在每个节点上运行，维护运行的Pod并提供Kubernetes运行时环境
 
@@ -423,7 +425,7 @@ Kubernetes 集群由控制平面和一个或多个工作节点组成，核心组
 
 > 集群可能需要每个节点上运行额外的软件，比如在Linux节点上运行systemd来监督本地组件
 
-##### Ⅲ.插件
+##### Ⅱ.插件
 
 插件（Addons）则用于扩展Kubernetes的功能，重要的如下：
 
@@ -495,13 +497,13 @@ spec:
 
 另一种方式是使用`kubectl`命令，将`.yaml`文件作为参数，示例：
 
-```sh
+```bash
 kubectl apply -f https://k8s.io/examples/application/deployment.yaml
 ```
 
 输出如下：
 
-```sh
+```bash
 deployment.apps/nginx-deployment created
 ```
 
@@ -529,7 +531,7 @@ deployment.apps/nginx-deployment created
 
 `kubectl`命令行工具支持多种不同的方式来创建和管理Kubernetes对象
 
-**管理技巧**
+###### i.管理技巧
 
 |    管理技术    |  作用于  | 建议的环境 | 支持的写者 | 学习难度 |
 | :------------: | :------: | :--------: | :--------: | :------: |
@@ -539,7 +541,7 @@ deployment.apps/nginx-deployment created
 
 > 注意：应该只使用一种技术来管理Kubernetes对象，否则它们作用在同一个对象时可能带来未知问题
 
-###### i.指令式命令
+###### ii.指令式命令
 
 运行一次性任务，直接在活跃对象上操作，不提供以前配置的历史记录
 
@@ -547,7 +549,7 @@ deployment.apps/nginx-deployment created
 
 创建一个Deployment对象来运行nginx容器的实例：
 
-```sh
+```bash
 kubectl create deployment nginx --image nginx
 ```
 
@@ -565,7 +567,7 @@ kubectl create deployment nginx --image nginx
 - 除在线运行数据外，命令不提供历史记录数据源
 - 命令不支持通过模板方式创建对象
 
-###### ii.指令式对象配置
+###### iii.指令式对象配置
 
 `kubectl`命令指定操作（创建、替换等），可选参数和至少一个文件名，指定的文件必须包含 对象的完整定义，使用YAML或JSON格式
 
@@ -575,19 +577,19 @@ kubectl create deployment nginx --image nginx
 
 创建配置文件中定义的对象：
 
-```sh
+```bash
 kubectl create -f nginx.yaml
 ```
 
 删除两个配置文件中定义的对象：
 
-```sh
+```bash
 kubectl delete -f nginx.yaml -f redis.yaml
 ```
 
 覆盖更新配置定义的对象：
 
-```sh
+```bash
 kubectl replace -f nginx.yaml
 ```
 
@@ -614,7 +616,7 @@ kubectl replace -f nginx.yaml
 - 指令式对象配置更适合文件，而非目录
 - 对象的更新必须反映在配置文件中，否则会在下一次替换时丢失
 
-###### iii.声明式对象配置
+###### iv.声明式对象配置
 
 `kubectl`根据目录中配置文件对不同的对象执行不同的操作，会自动检测每个文件的创建、更新和删除操作
 
@@ -624,14 +626,14 @@ kubectl replace -f nginx.yaml
 
 处理`configs`目录中的所有对象配置文件，创建并更新活动对象。可以先使用`diff`子命令查看将要进行的更改，然后在进行应用：
 
-```sh
+```bash
 kubectl diff -f configs/
 kubectl apply -f configs/
 ```
 
 递归处理目录：
 
-```sh
+```bash
 kubectl diff -R -f configs/
 kubectl apply -R -f configs/
 ```
@@ -848,25 +850,25 @@ spec:
 
 比如使用`kubectl`定位`apiserver`，基于等值：
 
-```sh
+```bash
 kubectl get pods -l environment=production,tier=frontend
 ```
 
 或者基于集合：
 
-```sh
+```bash
 kubectl get pods -l 'environment in (production),tier in (frontend)'
 ```
 
 或者实现值的`或`操作：
 
-```sh
+```bash
 kubectl get pods -l 'environment in (production, qa)'
 ```
 
 或者通过`notin`限制不匹配：
 
-```sh
+```bash
 kubectl get pods -l 'environment,environment notin (frontend)'
 ```
 
@@ -922,13 +924,13 @@ selector:
 
 可以使用`kubectl label`对现有的Pod和其他资源重新打标签，例如将nginx Pod标记为前端层，运行：
 
-```sh
+```bash
 kubectl label pods -l app=nginx tier=fe
 ```
 
 输出：
 
-```sh
+```bash
 pod/my-nginx-2035384211-j5fhi labeled
 pod/my-nginx-2035384211-u2c7e labeled
 pod/my-nginx-2035384211-u3t6x labeled
@@ -938,7 +940,7 @@ pod/my-nginx-2035384211-u3t6x labeled
 
 查看刚才设置了标签的Pod：
 
-```sh
+```bash
 kubectl get pods -l app=nginx -L tier
 ```
 
@@ -946,7 +948,7 @@ kubectl get pods -l app=nginx -L tier
 
 输出：
 
-```sh
+```bash
 NAME                        READY     STATUS    RESTARTS   AGE       TIER
 my-nginx-2035384211-j5fhi   1/1       Running   0          23m       fe
 my-nginx-2035384211-u2c7e   1/1       Running   0          23m       fe
@@ -987,13 +989,13 @@ Kubernetes启动时会创建四个初始命名空间：
 
 列出集群中现存的命名空间：
 
-```sh
+```bash
 kubectl get namespace
 ```
 
 输出：
 
-```sh
+```bash
 NAME              STATUS   AGE
 default           Active   1d
 kube-node-lease   Active   1d
@@ -1005,7 +1007,7 @@ kube-system       Active   1d
 
 使用`--namespace`参数，例如：
 
-```sh
+```bash
 kubectl run nginx --image=nginx --namespace=<名字空间名称>
 kubectl get pods --namespace=<名字空间名称>
 ```
@@ -1014,7 +1016,7 @@ kubectl get pods --namespace=<名字空间名称>
 
 将命名空间用于所有后续kubectl命令：
 
-```sh
+```bash
 kubectl config set-context --current --namespace=<名字空间名称>
 # 验证
 kubectl config view --minify | grep namespace:
@@ -1030,7 +1032,7 @@ kubectl config view --minify | grep namespace:
 
 有些底层资源不属于任何命名空间，例如节点和持久化卷，可以通过kubectl查看Kubernetes资源是否有命名空间：
 
-```sh
+```bash
 # 位于命名空间中的资源
 kubectl api-resources --namespaced=true
 
@@ -1046,7 +1048,7 @@ Kubernetes控制面会为所有命名空间设置一个不可变更的标签`kub
 
 为对象附加非标识的元数据，和标签一样，是键值对，但是不用于对象的选择和查找：
 
-```sh
+```json
 "metadata": {
   "annotations": {
     "key1" : "value1",
@@ -1084,7 +1086,7 @@ spec:
 
 `status.phase`字段值为`Running`的所有Pod：
 
-```sh
+```bash
 kubectl get pods --field-selector status.phase=Running
 ```
 
@@ -1092,13 +1094,13 @@ kubectl get pods --field-selector status.phase=Running
 
 不同的Kubernetes资源类型支持不同的字段选择算符，所有资源类型都支持`metadata.name`和`metadata.namespace`字段。使用不支持的字段选择符会报错，例如：
 
-```sh
+```bash
 kubectl get ingress --field-selector foo.bar=baz
 ```
 
 输出：
 
-```sh
+```bash
 Error from server (BadRequest): Unable to find "ingresses" that match label selector "", field selector "foo.bar=baz": "foo.bar" is not a known field selector: only "metadata.name", "metadata.namespace"
 ```
 
@@ -1120,7 +1122,7 @@ Error from server (BadRequest): Unable to find "ingresses" that match label sele
 
 字段选择算符支持`=`、`==`和`!=`（`=`和`==`效果一致）。例如，下面命令将筛选所有不属于`default`命名空间的Kubernetes服务：
 
-```sh
+```bash
 kubectl get services  --all-namespaces --field-selector metadata.namespace!=default
 ```
 
@@ -1130,7 +1132,7 @@ kubectl get services  --all-namespaces --field-selector metadata.namespace!=defa
 
 通过使用逗号分隔的列表组成一个选择链。例如，下面命令将筛选`status.phase`字段不等于`Running`同时`spec.restartPolicy`字段等于`Always`的所有Pod：
 
-```sh
+```bash
 kubectl get pods --field-selector=status.phase!=Running,spec.restartPolicy=Always
 ```
 
@@ -1138,7 +1140,7 @@ kubectl get pods --field-selector=status.phase!=Running,spec.restartPolicy=Alway
 
 跨资源使用字段选择算符。例如，下面命令将筛选出所有不在`default`命名空间中的StatefulSet和Service：
 
-```sh
+```bash
 kubectl get statefulsets,services --all-namespaces --field-selector metadata.namespace!=default
 ```
 
@@ -1941,7 +1943,7 @@ Kubernetes的内置控制器都运行在kube-controller-manager内，这些控�
 
 Lease实际上是一种Kubernetes资源，跟Pod、Deployment一样，例如：
 
-```bash
+```yaml
 apiVersion: coordination.k8s.io/v1
 kind: Lease
 metadata:
@@ -1950,7 +1952,7 @@ metadata:
 
 Lease存放在API服务器中，由etcd保存，保存的不是业务数据，而是协调信息：
 
-```bash
+```
 Lease
 ├── 谁正在持有它（Holder）
 ├── 最后一次续约时间
@@ -2027,7 +2029,7 @@ apiserver-1dfef752bcb36637d2763d1868        apiserver-1dfef752bcb36637d2763d1868
 kubectl -n kube-system get lease apiserver-07a5ea9b9b072c4a5f3d1c3702 -o yaml
 ```
 
-```bash
+```yaml
 apiVersion: coordination.k8s.io/v1
 kind: Lease
 metadata:
@@ -2060,4 +2062,247 @@ kube-apiserver已到期切不续存的租约，将在到期1小时后被新的ku
 > Lease命名要避免冲突，官方建议使用增加前缀或者后缀，使用名称Hash值或者应用实例ID等，如：`example-foo-a7d82`、`example-foo-dev`、`example-foo-prod`，这样每个实例都拥有自己的Lease，互不影响
 
 #### 9.云控制器管理器
+
+`cloud-controller-manager`是一个Kubernetes控制平面组件，用于云平台的控制逻辑，将用户集群连接到云提供商的API上，并将与云平台交互的组件和用户集群交互的组件分离。该组件基于插件机制构造，因此不同的云厂商都能将其平台与Kubernetes集成
+
+##### Ⅰ.设计
+
+云控制器管理器以一组多副本的进程集合的形式运行在控制平面中，通常表现为Pod中的容器，每个`cloud-controller-manager`在同一进程中实现多个控制器
+
+>云控制器管理器也可用插件形式来运行
+
+##### Ⅱ.云控制器管理器的功能
+
+云控制器管理器中的控制器包括：
+
+###### i.节点控制器
+
+在云基础设施中创建了新服务器时更新Node对象，并从云提供商获取当前租户中的主机信息。该控制器执行以下功能：
+
+1. 使用从云平台API获取的对应服务器的唯一标识符更新Node对象
+2. 使用云平台的信息为Node对象添加注解和标签，例如节点所在的区域（Region）和所具有的资源（CPU、内存等）
+3. 获取节点的网络地址和主机名
+4. 检查节点的健康状况，若节点无响应，控制器通过云平台API查看该节点是否禁用、删除或终止。如果节点已从云中删除，则控制器也从集群中删除该Node对象
+
+###### ii.路由控制器
+
+Route控制器负责配置云平台中的路由，以便Kubernetes集群中不同节点上的容器之间可以相互通信。基于云驱动的实现，路由控制器可能会为Pod网络分配IP地址块
+
+###### iii.服务控制器
+
+服务与负载均衡器、IP地址、网络包过滤、目标健康检查等云基础设施组件集成。服务控制器与云驱动的API交互，以配置负载均衡器和其他基础设施组件
+
+##### Ⅲ.鉴权
+
+云控制器管理器为了完成自身工作而产生的对各类API对象的访问需求
+
+###### i.节点控制器
+
+节点控制器只操作 Node 对象，需要读取和修改Node对象的完全访问权限，`v1/Node`：
+
+- get
+- list
+- create
+- update
+- patch
+- watch
+- delete
+
+###### ii.路由控制器
+
+路由控制器会监听Node对象的创建事件，配置路由设施，需要读取Node对象的Get权限，`v1/Node`：
+
+* get
+
+###### iii.服务控制器
+
+监测Service对象的create、update和delete事件，并配置对应Service的负载均衡。用于访问Service对象，需要获取list和watch访问权限。用于更新Service对象，需要获取`status`子资源的patch和update访问权限，`v1/Service`：
+
+- list
+- get
+- watch
+- patch
+- update
+
+###### iv.其他
+
+在云控制器管理器的实现中，其核心部分需要创建Event对象的访问权限， 并创建ServiceAccount资源以保证操作安全性的权限
+
+`v1/Event`：
+
+- create
+- patch
+- update
+
+`v1/ServiceAccount`：
+
+- create
+
+用于云控制器管理器RBAC的ClusterRole如下例所示：
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloud-controller-manager
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - nodes/status
+  verbs:
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+```
+
+#### 10.Kubernetes自我修复
+
+Kubernetes通过自我修复能力来维护工作负载的健康和可用性，它能够自动替换失败的容器，在节点不可用时重新调度工作负载，维持系统的期望状态
+
+##### Ⅰ.自我修复能力
+
+* 容器级重启：如果Pod中的某个容器失败，Kubernetes会根据restartPolicy定义的策略重启此容器
+* 副本替换：如果Deployment或StatefulSet中的某个Pod失败，Kubernetes会创建一个替代Pod，以维持指定的副本数量
+* 持久存储恢复：如果挂载了持久卷（PV）的Pod发生故障，Kubernetes可以将该卷重新挂载到另一个节点上的新Pod
+* 服务的负载均衡：如果Serivce的某个Pod故障，Kubernetes会自动将其从Service的端点中移除，以确保流量仅路由到健康的Pod
+
+以下是提供Kubernetes自我修复功能的一些关键组件：
+
+* kubelet：确保容器正在运行，并重启失败的容器
+* Deployment（通过 ReplicaSet）、ReplicaSet、StatefulSet和DaemonSet控制器：维持期望的Pod副本数量
+* PersistentVolume控制器：管理有状态工作负载的卷挂载和卸载
+
+> 注意：
+>
+> * 存储故障：如果持久卷不可用，需要用户自行解决
+> * 应用程序错误：Kubernetes可以重启容器，但应用程序问题需要用户自行解决
+
+#### 11.垃圾收集
+
+垃圾收集（Garbage Collection）是Kubernetes用于清理集群资源的各种机制的统称，清理的资源包括：
+
+* 终止的Pod
+* 已完成的Job
+* 不再存在属主引用的对象
+* 未使用的容器和容器镜像
+* 动态制备的、StorageClass回收策略为Delete的PV卷
+* 阻滞或者过期的CertificateSigningRequest(CSR)
+* 在以下情形中删除了的节点对象
+  * 当集群使用云控制器管理器运行于云端时
+  * 当集群使用类似于云控制器管理器的插件运行在本地环境中时
+* 节点租约对象
+
+##### Ⅰ.属主和依赖
+
+属主引用（Owner Reference）标识出哪些对象依赖于其他对象，Kubernetes以此为控制平面以及其他API客户端在删除某对象时，能够同时清理关联的资源。一般情况下，属主引用由Kubernetes自动管理
+
+##### Ⅱ.级联删除
+
+Kubernetes会检查并删除不再拥有属主引用的对象，例如在删除了ReplicaSet之后留下来的Pod。当用户删除某个对象时，可以控制Kubernetes是否去自动删除该对象的依赖对象，这个过程称为级联删除（Cascading Deletion）。级联删除有两种类型：前台级联删除和后台级联删除。用户也可以使用Kubernetes的Finalizers来控制垃圾收集机制，决定删除包含属主引用资源的策略
+
+###### i.前台级联删除
+
+被删除的属主对象进入`deletion in progress`状态，并对该对象触发一系列改变：
+
+* API服务器将对象的`metadata.deletionTimestamp`字段设置为执行删除的时间点
+* API服务器将对象的`metadata.finalizers`字段设置为`foregroundDeletion`
+* 在删除完成前，Kubernetes的API仍然能找到该对象
+
+控制器会删除其已知的依赖对象，最后才删除该属主对象，这时Kubernetes的API就无法再找到该对象
+
+> 在前台级联删除的过程中，带有`ownerReference.blockOwnerDeletion=true`字段并且存在于垃圾收集控制器缓存中的依赖对象会阻止属主对象被删除，详见[使用前台级联删除](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/use-cascading-deletion/#use-foreground-cascading-deletion)
+
+###### ii.后台级联删除
+
+Kubernetes会立即删除属主对象，而垃圾收集控制器在后台清理所有依赖对象。若存在Finalizers，则会确保所有必要的清理任务完成后对象才被删除
+
+> Kubernetes默认使用后台级联删除方案
+
+###### iii.被遗弃的依赖对象
+
+当Kubernetes删除属主对象时，其依赖对象称为被遗弃（Orphaned）对象，Kubernetes默认会删除依赖对象，可参阅[删除属主对象和遗弃依赖对象](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/use-cascading-deletion/#set-orphan-deletion-policy)重载该行为
+
+##### Ⅲ.未使用容器和镜像的垃圾收集
+
+kubelet每五分钟对未使用的镜像执行一次垃圾收集，每分钟对未使用的容器执行一次垃圾收集。应避免使用外部的垃圾收集工具以免影响kubelet的垃圾收集行为。可通过配置KubeletConfiguration资源来调整kubelet的垃圾收集相关行为
+
+###### i.容器镜像生命周期
+
+Kubernetest通过镜像管理器（Image Manager）来管理所有镜像的生命周期，该管理器是Kubelet的一部分，工作时与cadvisor协同。kubelet在垃圾收集时会考虑如下磁盘用量约束：
+
+- `HighThresholdPercent`
+- `LowThresholdPercent`
+
+磁盘用量超出`HighThresholdPercent`会触发垃圾收集，垃圾收集器会基于镜像的上次被使用时间按顺序删除镜像，直至磁盘用到达到`LowThresholdPercent`为止
+
+###### ii.未使用容器镜像的垃圾收集
+
+与磁盘使用量无关，用户可以通过kubelet配置，为每个节点指定本地镜像未被使用的最长时间，配置项`imageMaximumGCAge`，该值遵循Kubernetest持续时间（Duration）格式，可参阅[持续时间（Duration）](https://kubernetes.io/zh-cn/docs/reference/glossary/?all=true#term-duration)，例如`12h45m`代表12小时45分钟
+
+> 说明：
+>
+> 镜像的使用时间在kubelet启动后开始记录，当kubelet被重启后，镜像的历史使用时间会丢失，数据被重置
+
+###### iii.容器垃圾收集
+
+kubelet会基于如下变量对所有未使用的容器执行垃圾收集操作（变量可由用户定义）：
+
+* `MinAge`：已停止的容器至少保留多久，超过这个时间才允许删除，设置`0`表示禁止使用此规则
+* `MaxPerPodContainer`：每个Pod最多可保留多少个已停止的容器，设置小于`0`表示禁止使用此规则
+* `MaxContainers`：整个节点最多保留多少个已停止的容器，设置小于`0`表示禁止使用此规则
+
+除以上变量外，kubelet还会收集无标识的以及已删除的容器，一般从最长时间未使用的容器开始
+
+如果为了满足`MaxPerPodContainer`，导致整个节点保存的已停止容器总数超过`MaxContainers`，那么两个规则发生冲突，kubelet会自动调整`MaxPerPodContainer`的值以解决冲突
+
+> kubelet仅回收由它所管理的容器
+
+##### Ⅳ.配置垃圾收集
+
+通过配置来调整资源的垃圾收集行为：
+
+- [配置 Kubernetes 对象的级联删除](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/use-cascading-deletion/)
+- [配置已完成 Job 的清理](https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/ttlafterfinished/)
 
