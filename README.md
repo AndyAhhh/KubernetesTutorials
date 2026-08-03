@@ -66,7 +66,7 @@ minikube start
 >    [Service]
 >    Environment="HTTP_PROXY=http://宿主机IP:代理端口"
 >    Environment="HTTPS_PROXY=http://宿主机IP:代理端口"
->    Environment="NO_PROXY=localhost,127.0.0.1,192.168.0.0/16"
+>    Environment="NO_PROXY=localhost,127.0.0.1,::1,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,.local"
 >    EOF
 >    ```
 >
@@ -93,12 +93,12 @@ minikube start
 >
 >    ```bash
 >    minikube delete
->                                                                                                             
+>                                                                                                                
 >    minikube start \
 >      --driver=docker \
 >      --docker-env HTTP_PROXY=http://宿主机IP:代理端口 \
 >      --docker-env HTTPS_PROXY=http://宿主机IP:代理端口 \
->      --docker-env NO_PROXY=localhost,127.0.0.1,192.168.0.0/16
+>      --docker-env NO_PROXY=localhost,127.0.0.1,::1,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,.local
 >    ```
 >
 >    > 如果还是提示镜像拉取失败，则可以手动在docker拉取镜像代替，比如示例中会遇到`Pulling base image v0.0.50`失败，则通过`docker pull gcr.io/k8s-minikube/kicbase:v0.0.50`拉取镜像，然后在`minikube start`指令中加入参数`--base-image=gcr.io/k8s-minikube/kicbase:v0.0.50`
@@ -129,23 +129,94 @@ minikube start
 
 #### 5.部署示例应用
 
-* 部署一个示例应用，使用端口`8080`
+* 部署一个Deployment
 
   ```bash
   kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
-  kubectl expose deployment hello-minikube --type=NodePort --port=8080
   ```
 
 * 部署后通过指令查看
 
   ```bash
-  kubectl get services hello-minikube
+  kubectl get deployments
   ```
+
+  输出：
+
+  ```bash
+  NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+  hello-minikube   1/1     1            1           55s
+  ```
+
+* 查看Pods
+
+  ```bash
+  kubectl get pods
+  ```
+
+  输出：
+
+  ```bash
+  NAME                              READY   STATUS    RESTARTS   AGE
+  hello-minikube-58f7c595dd-f7544   1/1     Running   0          21s
+  ```
+
+* 查看集群事件
+
+  ```bash
+  kubectl get events
+  ```
+
+* 查看`kubectl`配置
+
+  ```bash
+  kubectl config view
+  ```
+
+* 查看Pod中容器的应用程序日志（使用Pod名称）
+
+  ```bash
+  kubectl logs <hello-minikube-58f7c595dd-f7544>
+  ```
+
+* 创建Service，使用端口`8080`（测试镜像监听的是TCP`8080`端口）
+
+  ```bash
+  kubectl expose deployment hello-minikube --type=NodePort --port=8080
+  ```
+
+* 查看Service
+
+  ```bash
+  kubectl get services
+  ```
+
+  输出：
+
+  ```bash
+  NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+  hello-minikube   NodePort    10.111.55.94   <none>        8080:30761/TCP   29s
+  kubernetes       ClusterIP   10.96.0.1      <none>        443/TCP          4m55s
+  ```
+
+  > 对于支持负载均衡器的云服务平台而言，平台将提供一个外部 IP 来访问该 Service。在Minikube上，`LoadBalancer`使得Service可以通过命令`minikube service`访问
 
 * 查看执行服务的url访问地址信息
 
   ```bash
   minikube service hello-minikube
+  ```
+
+  输出：
+
+  ```bash
+  ┌───────────┬────────────────┬─────────────┬───────────────────────────┐
+  │ NAMESPACE │      NAME      │ TARGET PORT │            URL            │
+  ├───────────┼────────────────┼─────────────┼───────────────────────────┤
+  │ default   │ hello-minikube │ 8080        │ http://192.168.49.2:30761 │
+  └───────────┴────────────────┴─────────────┴───────────────────────────┘
+  * Opening service default/hello-minikube in default browser...
+    http://192.168.49.2:30761
   ```
 
 * 对服务进行端口转发
@@ -208,6 +279,12 @@ minikube start
 minikube内置的一些可以快速部署的应用和服务
 
 * 列出集群中所有可用的插件
+
+  ```bash
+  minikube addons list
+  ```
+
+* 启用指定插件
 
   ```bash
   minikube addons enable <name>
@@ -2306,3 +2383,12 @@ kubelet会基于如下变量对所有未使用的容器执行垃圾收集操作�
 - [配置 Kubernetes 对象的级联删除](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/use-cascading-deletion/)
 - [配置已完成 Job 的清理](https://kubernetes.io/zh-cn/docs/concepts/workloads/controllers/ttlafterfinished/)
 
+### 四、教程
+
+##### 1.创建集群
+
+参考第一章部署好minikube，通过`minikube start`启动Minikube集群，并通过`minikube status`验证
+
+##### 2.创建Deployment
+
+通过Deployment部署容器化应用，创建Deployment后，Kubernetes控制平面将Deployment中包含的应用实例调度到集群中的各个节点上，并持续监视并维护这些实例
