@@ -46,7 +46,7 @@ Kubernetes 是一个开源的容器编排引擎，用来对容器化应用进行
 #### 3.启动集群
 
 ```bash
-minikube start --driver=docker
+minikube start
 ```
 
 > 注意（国内环境建议使用下述方案）：国内网络环境一般不支持，建议开启代理。
@@ -93,7 +93,7 @@ minikube start --driver=docker
 >
 >    ```bash
 >    minikube delete
->                                                                                                          
+>                                                                                                             
 >    minikube start \
 >      --driver=docker \
 >      --docker-env HTTP_PROXY=http://宿主机IP:代理端口 \
