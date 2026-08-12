@@ -93,7 +93,7 @@ minikube start
 >
 >    ```bash
 >    minikube delete
->                                                                                                                
+>                                                                                                                   
 >    minikube start \
 >      --driver=docker \
 >      --docker-env HTTP_PROXY=http://宿主机IP:代理端口 \
@@ -2385,10 +2385,78 @@ kubelet会基于如下变量对所有未使用的容器执行垃圾收集操作�
 
 ### 四、教程
 
-##### 1.创建集群
+#### 1.Kubernetes基础知识
+
+##### Ⅰ.创建集群
 
 参考第一章部署好minikube，通过`minikube start`启动Minikube集群，并通过`minikube status`验证
 
-##### 2.创建Deployment
+##### Ⅱ.部署应用
 
-通过Deployment部署容器化应用，创建Deployment后，Kubernetes控制平面将Deployment中包含的应用实例调度到集群中的各个节点上，并持续监视并维护这些实例
+###### i.使用kubectl创建 Deployment
+
+kubectl命令的常见格式是：`kubectl action resource`，这会对指定的资源（类似`node`或`deployment`）执行指定的操作（类似`create`、`describe`或`delete`），可以在子命令之后使用`--help`获取帮助信息
+
+* 查看kubectl的通信集群
+
+  ```bash
+  kubectl version
+  ```
+
+* 列出集群中的节点
+
+  ```bash
+  kubectl get nodes
+  ```
+
+* 部署应用
+
+  ```bash
+  kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+  ```
+
+* 列出应用
+
+  ```bash
+  kubectl get deployments
+  ```
+
+##### Ⅲ.了解应用
+
+###### i.查看Pod和节点
+
+* 列出集群中的Pod
+
+  ```bash
+  kubectl get pods
+  ```
+
+* 查看Pod详情
+
+  ```bash
+  kubectl describe pods
+  ```
+
+##### Ⅳ.公开应用
+
+###### i.使用Service公开应用
+
+* 列出service
+
+  ```bash
+  kubectl get services
+  ```
+
+* 创建service
+
+  ```bash
+  kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+  ```
+
+* 获取service外部访问ip和端口
+
+  ```bash
+  kubectl describe services/kubernetes-bootcamp
+  ```
+
+  
