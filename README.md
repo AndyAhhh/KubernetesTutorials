@@ -93,7 +93,7 @@ minikube start
 >
 >    ```bash
 >    minikube delete
->                                                                                                                   
+>                                                                                                                      
 >    minikube start \
 >      --driver=docker \
 >      --docker-env HTTP_PROXY=http://宿主机IP:代理端口 \
@@ -1732,6 +1732,8 @@ Kubernetes所有集群数据的后端键值存储
 ##### Ⅱ.Web UI（Dashboard）
 
 Dashboard是Kubernetes集群的通用、基于Web的用户界面。用户可以使用它管理集群中运行的应用程序以及集群本身，并进行故障排除
+
+> 官方：Kubernetes Dashboard已弃用且停止维护，建议使用Headlamp替代
 
 ##### Ⅲ.Container resource monitoring（容器资源监控）
 
