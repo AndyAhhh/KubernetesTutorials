@@ -2960,6 +2960,8 @@ Pod。
 
 不用关心。
 
+> **Service** 只是一个配置文件，存在 etcd 里，不是运行的服务端
+
 ------
 
 #### 一个生活中的例子
@@ -3257,6 +3259,8 @@ kube-proxy：
 自己的：
 
 转发表。
+
+> 每个节点上的 kube-proxy **主动连接 kube-apiserver**（通常通过 HTTPS），并监听 Service 和 Endpoints 对象的变化；当 kube-proxy 发现有新的 Service 或 Endpoints 变化时，它会在**自己所在的节点**上修改 iptables/IPVS 规则
 
 ------
 
